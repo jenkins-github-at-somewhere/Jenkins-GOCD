@@ -10,7 +10,7 @@ function writeData() {
   _file=${1}
   _link=${2}
   touch ${_file}
-  if [[ -f ${_link} ]]; then unlink ${_link}; fi
+  if [[ -h ${_link} ]]; then unlink ${_link}; fi
   ln -s ${_file} ${_link}
 
   cat > ${_file} <<EOL
@@ -72,17 +72,17 @@ function main() {
   cd ${WORKSPACE}
   git checkout master
 
+  if [[ -h latest ]]; then unlink latest; fi
   if [[ ${PUBLISH_GIT_BRANCH} == Release_* ]] || [[ ${PUBLISH_GIT_BRANCH} == OPDK_* ]];
     then
 
-    if [[ -f latest ]]; then unlink latest; fi
     ln -s ReleaseBuilds latest
     cd ${WORKSPACE}/ReleaseBuilds
 
     #Create Release Build Directory
     mkdir ${PUBLISH_GIT_BRANCH}
 
-    if [[ -f latest ]]; then unlink latest; fi
+    if [[ -h latest ]]; then unlink latest; fi
     ln -s ${PUBLISH_GIT_BRANCH} latest
 
     cd ${PUBLISH_GIT_BRANCH}
@@ -91,7 +91,6 @@ function main() {
   elif [[ ${PUBLISH_GIT_BRANCH} == "master" ]];
   then
 
-    if [[ -f latest ]]; then unlink latest; fi
     ln -s MasterBuilds latest
     cd ${WORKSPACE}/MasterBuilds
 
@@ -99,13 +98,12 @@ function main() {
 
   else
 
-    if [[ -f latest ]]; then unlink latest; fi
     ln -s FeatureBuilds latest
     #Create Feature Build Directory
     cd ${WORKSPACE}/FeatureBuilds
 
     mkdir ${PUBLISH_GIT_BRANCH}
-    if [[ -f latest ]]; then unlink latest; fi
+    if [[ -h latest ]]; then unlink latest; fi
     ln -s ${PUBLISH_GIT_BRANCH} latest
 
     cd ${PUBLISH_GIT_BRANCH}
