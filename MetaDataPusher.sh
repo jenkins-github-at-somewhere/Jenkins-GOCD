@@ -6,7 +6,8 @@ NOW=`date +%s`
 # Write METADATA Information of the build to MetaFile
 ##
 function writeData() {
-  echo "Writing METADATA Information: "
+
+  echo -e "Writing METADATA Information: \n"
   _file=${1}
   _link=${2}
   touch ${_file}
@@ -26,7 +27,7 @@ JENKINS_JOB_NUMBER=${BUILD_NUMBER}
 EOL
 
   curl ${JENKINS_URL}job/${PUBLISH_BINARY_JOB_NAME}/${PUBLISH_BINARY_JOB_ID}/artifact/build.info --silent >> ${_file}
-
+  cat ${_file}
 }
 
 ##
@@ -72,6 +73,11 @@ function main() {
   cd ${WORKSPACE}
   git checkout master
 
+  echo -e "\nPublishing Reports:"
+  echo -e "\tBranch: ${PUBLISH_GIT_BRANCH}"
+  echo -e "\tJob: ${PUBLISH_JOB_NAME}"
+  echo -e "\tCommit: ${PUBLISH_GIT_COMMIT}\n"
+
   if [[ -h latest ]]; then unlink latest; fi
   if [[ ${PUBLISH_GIT_BRANCH} == Release_* ]] || [[ ${PUBLISH_GIT_BRANCH} == OPDK_* ]];
     then
@@ -110,7 +116,10 @@ function main() {
     prepareMetaFile
   fi
 
+  echo -e "\nPublishing MetaData to GIT:\n"
   commitToMaster
 }
 
 main
+
+echo -e "\nEND\n"
