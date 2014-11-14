@@ -22,6 +22,7 @@ PUBLISH_JOB_ID=${PUBLISH_JOB_ID}
 PUBLISH_ARTIFACT=${PUBLISH_ARTIFACT}
 ######################################
 JENKINS_URL=${JENKINS_URL}
+JENKINS_JOB_NAME=${JOB_NAME}
 JENKINS_JOB_NUMBER=${BUILD_NUMBER}
 ######################################
 EOL
