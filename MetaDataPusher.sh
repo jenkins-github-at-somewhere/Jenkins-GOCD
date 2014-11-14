@@ -100,8 +100,8 @@ function main() {
     #Create Release Build Directory
     mkdir ${PUBLISH_GIT_BRANCH}
 
-    if [[ -h lastSuccessfulBuild ]]; then unlink lastSuccessfulBuild; fi
-    ln -s ${PUBLISH_GIT_BRANCH} lastSuccessfulBuild
+    if [[ -h lastSuccessfulBranch ]]; then unlink lastSuccessfulBranch; fi
+    ln -s ${PUBLISH_GIT_BRANCH} lastSuccessfulBranch
 
     cd ${PUBLISH_GIT_BRANCH}
     prepareMetaFile
@@ -121,8 +121,8 @@ function main() {
     cd ${WORKSPACE}/FeatureBuilds
 
     mkdir ${PUBLISH_GIT_BRANCH}
-    if [[ -h lastSuccessfulBuild ]]; then unlink lastSuccessfulBuild; fi
-    ln -s ${PUBLISH_GIT_BRANCH} lastSuccessfulBuild
+    if [[ -h lastSuccessfulBranch ]]; then unlink lastSuccessfulBranch; fi
+    ln -s ${PUBLISH_GIT_BRANCH} lastSuccessfulBranch
 
     cd ${PUBLISH_GIT_BRANCH}
     prepareMetaFile
