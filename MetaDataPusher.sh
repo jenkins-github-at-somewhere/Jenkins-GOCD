@@ -31,6 +31,15 @@ EOL
 }
 
 ##
+# Git init. Create Root Folders.
+##
+function createRootFolders() {
+  mkdir MasterBuilds
+  mkdir ReleaseBuilds
+  mkdir FeatureBuilds
+}
+
+##
 # Prepare the appropriate MetaFile in location based on JobName
 ##
 function prepareMetaFile(){
@@ -38,17 +47,17 @@ function prepareMetaFile(){
   if [[ ${PUBLISH_JOB_NAME} == *_Sanity ]];
   then
      _file=Sanity_${NOW}.properties
-      writeData ${_file} latest_sanity
+      writeData ${_file} lastSuccessfulSanity
 
    elif [[ ${PUBLISH_JOB_NAME} == *_Regression* ]];
    then
      _file=Regression_${NOW}.properties
-      writeData ${_file} latest_regression
+      writeData ${_file} lastSuccessfulRegression
 
   elif [[ ${PUBLISH_JOB_NAME} == *_Performance* ]];
   then
      _file=Performance_${NOW}.properties
-      writeData ${_file} latest_performance
+      writeData ${_file} lastSuccessfulPerformance
   else
      echo "Unknown Job!!"
   fi
@@ -73,23 +82,25 @@ function main() {
   cd ${WORKSPACE}
   git checkout master
 
+  createRootFolders
+
   echo -e "\nPublishing Reports:"
   echo -e "\tBranch: ${PUBLISH_GIT_BRANCH}"
   echo -e "\tJob: ${PUBLISH_JOB_NAME}"
   echo -e "\tCommit: ${PUBLISH_GIT_COMMIT}\n"
 
-  if [[ -h latest ]]; then unlink latest; fi
+  if [[ -h lastSuccessfulBuild ]]; then unlink lastSuccessfulBuild; fi
   if [[ ${PUBLISH_GIT_BRANCH} == Release_* ]] || [[ ${PUBLISH_GIT_BRANCH} == OPDK_* ]];
     then
 
-    ln -s ReleaseBuilds latest
+    ln -s ReleaseBuilds lastSuccessfulBuild
     cd ${WORKSPACE}/ReleaseBuilds
 
     #Create Release Build Directory
     mkdir ${PUBLISH_GIT_BRANCH}
 
-    if [[ -h latest ]]; then unlink latest; fi
-    ln -s ${PUBLISH_GIT_BRANCH} latest
+    if [[ -h lastSuccessfulBuild ]]; then unlink lastSuccessfulBuild; fi
+    ln -s ${PUBLISH_GIT_BRANCH} lastSuccessfulBuild
 
     cd ${PUBLISH_GIT_BRANCH}
     prepareMetaFile
@@ -97,20 +108,20 @@ function main() {
   elif [[ ${PUBLISH_GIT_BRANCH} == "master" ]];
   then
 
-    ln -s MasterBuilds latest
+    ln -s MasterBuilds lastSuccessfulBuild
     cd ${WORKSPACE}/MasterBuilds
 
     prepareMetaFile
 
   else
 
-    ln -s FeatureBuilds latest
+    ln -s FeatureBuilds lastSuccessfulBuild
     #Create Feature Build Directory
     cd ${WORKSPACE}/FeatureBuilds
 
     mkdir ${PUBLISH_GIT_BRANCH}
-    if [[ -h latest ]]; then unlink latest; fi
-    ln -s ${PUBLISH_GIT_BRANCH} latest
+    if [[ -h lastSuccessfulBuild ]]; then unlink lastSuccessfulBuild; fi
+    ln -s ${PUBLISH_GIT_BRANCH} lastSuccessfulBuild
 
     cd ${PUBLISH_GIT_BRANCH}
     prepareMetaFile
