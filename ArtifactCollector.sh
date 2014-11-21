@@ -35,7 +35,14 @@ function processArtifacts() {
     echo "JobName: ${PUBLISH_JOB_NAME}"
     echo "JobID: ${PUBLISH_JOB_ID}"
     echo "Artifact: ${PUBLISH_ARTIFACT}"
-    downloadArtifacts regression-report.html
+    if [[ ${PUBLISH_JOB_NAME} == "4G_Regression" ]];
+    then
+      downloadArtifacts regression-report.zip
+      unzip ${ARTIFACT_DIR}/regression-report.zip -d ${ARTIFACT_DIR}/
+      mv ${ARTIFACT_DIR}/archive ${ARTIFACT_DIR}/regression-report
+    else
+      downloadArtifacts regression-report.html
+    fi
   fi
 
   if [[ -h "${propertyDir}/lastSuccessfulPerformance" ]];
