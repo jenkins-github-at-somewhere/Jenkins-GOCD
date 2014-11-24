@@ -71,7 +71,7 @@ function commitToMaster() {
 
   cd ${WORKSPACE}
   git add .
-  git commit -m "${JENKINS_URL}job/${PUBLISH_JOB_NAME}/${PUBLISH_JOB_ID} [${PUBLISH_GIT_BRANCH}::${PUBLISH_GIT_COMMIT}] Checkin by jenkins";
+  git commit -m "${JENKINS_URL}job/${PUBLISH_JOB_NAME}/${PUBLISH_JOB_ID} [${PUBLISH_GIT_BRANCH}::${PUBLISH_GIT_COMMIT}] Checkin by jenkins @ [${NOW}]";
   git push origin master
 }
 
